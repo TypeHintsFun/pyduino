@@ -10,12 +10,12 @@ class Arduino:
             analog_pins: int | list[int] = 5,
             *,
             serial_rate: int | None = 9600,
-            timeout: int | None = 5):
+            timeout: int | None = 5,
+            board_name: str = 'Arduino'
+    ):
+        self.name = board_name
 
-        if serial_rate is None:
-            serial_rate = 9600
-        if timeout is None:
-            timeout = 5
+        self._serial = serial_port
 
         self.conn = serial.Serial(serial_port, serial_rate)
         self.conn.timeout = timeout
@@ -40,6 +40,10 @@ class Arduino:
     def analog_write(self, pin_number: int, analog_value: int):
         return self.a[pin_number].write(analog_value)
 
+    def __str__(self):
+        return f'{self.name} board at {self._serial} serial port with ' \
+               f'{len(self.d)} digital pins and {len(self.a)} analog pins'
+
 
 class Uno(Arduino):
     def __init__(
@@ -48,4 +52,7 @@ class Uno(Arduino):
             *,
             serial_rate: int | None = 9600,
             timeout: int | None = 5):
-        super(Uno, self).__init__(serial_port, 13, 6, serial_rate=serial_rate, timeout=timeout)
+        super(Uno, self).__init__(serial_port,
+                                  13, 6,
+                                  serial_rate=serial_rate, timeout=timeout,
+                                  board_name='Arduino "Uno"')

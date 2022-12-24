@@ -11,6 +11,7 @@ class Pin:
     def read(self) -> int:
         command = f'R{self.type}{self.number}'.encode()
         self.board.conn.write(command)
+
         line_received = self.board.conn.readline().decode().strip()
         header, value = line_received.split(':')  # e.g. D13:1
         if header == f'D{self.number}':
