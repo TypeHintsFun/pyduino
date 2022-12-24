@@ -23,6 +23,7 @@ class Pin:
 
     def set_mode(self, mode: str):
         mode = mode.upper()
+
         if mode != 'INPUT_PULLUP':
             mode = mode[0]
         else:
