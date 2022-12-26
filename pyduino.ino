@@ -27,7 +27,7 @@ void set_pin_mode(int pin_number, char mode){
      * - P: Sets the mode to INPUT_PULLUP
      */
 
-    switch (mode){
+    switch (mode) {
         case 'I':
             pinMode(pin_number, INPUT);
             break;
