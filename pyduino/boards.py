@@ -20,10 +20,10 @@ class Arduino:
         self.conn = serial.Serial(serial_port, serial_rate)
         self.conn.timeout = timeout
 
-        self.d: tuple[DigitalPin] = tuple(DigitalPin(d_pin, self) for d_pin in
-                                          (range(digital_pins) if isinstance(digital_pins, int) else digital_pins))
-        self.a: tuple[AnalogPin] = tuple(AnalogPin(a_pin, self) for a_pin in
-                                         (range(analog_pins) if isinstance(analog_pins, int) else analog_pins))
+        self.d: list[DigitalPin] = [DigitalPin(d_pin, self) for d_pin in
+                                    (range(digital_pins + 1) if isinstance(digital_pins, int) else digital_pins)]
+        self.a: list[AnalogPin] = [AnalogPin(a_pin, self) for a_pin in
+                                   (range(analog_pins + 1) if isinstance(digital_pins, int) else analog_pins)]
 
     def set_pin_mode(self, pin_number: int, mode: str):
         return self.d[pin_number].set_mode(mode)

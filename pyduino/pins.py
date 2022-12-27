@@ -1,3 +1,5 @@
+import logging
+
 
 class Pin:
     def __init__(self, number: int, board): # Цикрулярный импорт толкает людей на ужасные вещи: отсутствие тайпхинтов
@@ -12,14 +14,20 @@ class Pin:
         command = f'R{self.type}{self.number}'.encode()
         self.board.conn.write(command)
 
-        line_received = self.board.conn.readline().decode().strip()
-        header, value = line_received.split(':')  # e.g. D13:1
-        if header == f'D{self.number}':
-            # If header matches
-            return int(value)
+        while True:
+            line_received = self.board.conn.readline().decode()
+            logging.debug(f'{self} {line_received}')
+            if not line_received:
+                continue
+
+            header, value = line_received.split(':')  # e.g. D13:1
+            if header == f'D{self.number}':
+                # If header matches
+                return int(value)
 
     def write(self, value: int):
         command = f'W{self.type}{self.number}:{value}'.encode()
+        logging.debug(f'{self} {command}')
         self.board.conn.write(command)
 
     def set_mode(self, mode: str):
@@ -34,6 +42,7 @@ class Pin:
             raise ValueError('Mode must be equal to one of the list: INPUT (I), OUTPUT (O), INPUT_PULLUP (P)')
 
         command = f'M{mode}{self.number}'.encode()
+        logging.debug(f'{self} {command}')
         self.board.conn.write(command)
 
     def __str__(self):
